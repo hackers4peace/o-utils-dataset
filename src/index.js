@@ -17,8 +17,12 @@ class Dataset {
       return 'http://www.w3.org/ns/ldp#hasMemberRelation'
     } else if (alias === 'rev') {
       return 'http://www.w3.org/ns/ldp#isMemberOfRelation'
+    } else if (alias === 'resource') {
+      return 'http://www.w3.org/ns/ldp#:membershipResource'
     } else if (alias === 'ldp:member') {
       return 'http://www.w3.org/ns/ldp#member'
+    } else if (alias === 'ldp:DirectContainer') {
+      return 'http://www.w3.org/ns/ldp#DirectContainer'
     }
   }
 
@@ -68,7 +72,7 @@ class Dataset {
   /**
    * @param resourceUri
    * @param data
-   * @returns {Resource}
+   * @returns {Uri}
    */
   updateResource (resourceUri, data) {
     return jsonld.normalize(data, { algorithm: 'URDNA2015', format: 'application/nquads' })
@@ -77,6 +81,26 @@ class Dataset {
     }).then((hash) => {
       return resourceUri
     })
+  }
+
+  /**
+   * @param containerUri
+   * @param resourceUri
+   * @param link
+   * @returns {Uri}
+   */
+  createLinkedContainer (containerUri, resourceUri, link) {
+    let container = {
+      '@id': containerUri,
+      '@type': this.expand('ldp:DirectContainer'),
+      [ this.expand('resource') ]: { '@id': resourceUri }
+    }
+    if (link[this.expand('rel')]) {
+      container[this.expand('rel')] = link[this.expand('rel')]
+    } else if (link[this.expand('rev')]) {
+      container[this.expand('rev')] = link[this.expand('rev')]
+    }
+    return this.createResource(containerUri, container)
   }
 
   /**
