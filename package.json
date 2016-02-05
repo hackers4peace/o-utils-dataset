@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/hackers4peace/o-utils-dataset#readme",
   "dependencies": {
-    "jsonld": "^0.4.5",
-    "lodash": "^4.1.0"
+    "lodash": "^4.1.0",
+    "rdf-ext": "^0.3.0",
+    "rdf-normalize": "^0.3.0",
+    "rdf-parser-jsonld": "^0.3.0",
+    "rdf-parser-n3": "^0.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.0",
